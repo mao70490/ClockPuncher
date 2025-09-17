@@ -1,0 +1,17 @@
+# 忽略虛擬環境
+venv/
+
+# 忽略 config 資料夾
+config/
+
+# 忽略 Python 編譯暫存檔
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 忽略驗證碼資料集
+captcha_dataset/
+
+# 忽略 src 資料夾內含敏感資料
+src/

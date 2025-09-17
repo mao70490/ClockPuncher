@@ -1,0 +1,76 @@
+2025-09-12 16:06:21 - puncher - INFO - 開始執行上班打卡流程
+2025-09-12 16:06:21 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-12 16:06:35 - puncher - INFO - 上班打卡完成 ✅
+2025-09-12 16:06:37 - puncher - INFO - 瀏覽器關閉
+2025-09-12 16:42:50 - puncher - INFO - 開始執行下班打卡流程
+2025-09-12 16:42:50 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-12 16:42:56 - puncher - ERROR - 下班打卡時發生未預期錯誤
+Traceback (most recent call last):
+  File "C:\Users\user\source\repos\AutoClock\clock\puncher.py", line 33, in _login_and_click
+    captcha_text = self._get_captcha_text(driver)
+  File "C:\Users\user\source\repos\AutoClock\clock\puncher.py", line 24, in _get_captcha_text
+    captcha_element = driver.find_element(By.ID, "captchasign")
+  File "C:\Users\user\source\repos\AutoClock\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 926, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\AutoClock\venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 458, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\user\source\repos\AutoClock\venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="captchasign"]"}
+  (Session info: chrome=139.0.7258.157); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+	GetHandleVerifier [0x0x7ff608c73d85+79397]
+	GetHandleVerifier [0x0x7ff608c73de0+79488]
+	(No symbol) [0x0x7ff608a1c0fa]
+	(No symbol) [0x0x7ff608a72fd6]
+	(No symbol) [0x0x7ff608a7328c]
+	(No symbol) [0x0x7ff608ac6537]
+	(No symbol) [0x0x7ff608a9b1df]
+	(No symbol) [0x0x7ff608ac3344]
+	(No symbol) [0x0x7ff608a9af73]
+	(No symbol) [0x0x7ff608a641b1]
+	(No symbol) [0x0x7ff608a64f43]
+	GetHandleVerifier [0x0x7ff608f3e1ed+3005069]
+	GetHandleVerifier [0x0x7ff608f3831d+2980797]
+	GetHandleVerifier [0x0x7ff608f57e0d+3110573]
+	GetHandleVerifier [0x0x7ff608c8d6de+184190]
+	GetHandleVerifier [0x0x7ff608c9516f+215567]
+	GetHandleVerifier [0x0x7ff608c7c974+115220]
+	GetHandleVerifier [0x0x7ff608c7cb29+115657]
+	GetHandleVerifier [0x0x7ff608c63268+11016]
+	BaseThreadInitThunk [0x0x7ffd63307374+20]
+	RtlUserThreadStart [0x0x7ffd652bcc91+33]
+
+2025-09-12 16:42:59 - puncher - INFO - 瀏覽器關閉
+2025-09-12 16:44:26 - puncher - INFO - 開始執行下班打卡流程
+2025-09-12 16:44:26 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-12 16:44:33 - puncher - INFO - 辨識到驗證碼：D24EX
+2025-09-12 16:44:37 - puncher - INFO - 下班打卡完成 ✅
+2025-09-12 16:44:39 - puncher - INFO - 瀏覽器關閉
+2025-09-12 17:57:35 - puncher - INFO - 開始執行下班打卡流程
+2025-09-12 17:57:35 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-12 17:57:42 - puncher - INFO - 辨識到驗證碼：D92ZS
+2025-09-12 17:57:46 - puncher - INFO - 下班打卡完成 ✅
+2025-09-12 17:57:48 - puncher - INFO - 瀏覽器關閉
+2025-09-15 17:49:05 - puncher - INFO - 開始執行下班打卡流程
+2025-09-15 17:49:05 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-15 17:49:16 - puncher - INFO - 辨識到驗證碼：Q84CL
+2025-09-15 17:49:22 - puncher - INFO - 下班打卡完成 ✅
+2025-09-15 17:49:24 - puncher - INFO - 瀏覽器關閉
+2025-09-16 08:30:24 - puncher - INFO - 開始執行上班打卡流程
+2025-09-16 08:30:24 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-16 08:30:32 - puncher - INFO - 辨識到驗證碼：G26EL
+2025-09-16 08:30:37 - puncher - INFO - 上班打卡完成 ✅
+2025-09-16 08:30:39 - puncher - INFO - 瀏覽器關閉
+2025-09-16 17:48:06 - puncher - INFO - 開始執行下班打卡流程
+2025-09-16 17:48:06 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-16 17:48:14 - puncher - INFO - 辨識到驗證碼：K85TE
+2025-09-16 17:48:18 - puncher - INFO - 下班打卡完成 ✅
+2025-09-16 17:48:20 - puncher - INFO - 瀏覽器關閉
+2025-09-17 08:41:04 - puncher - INFO - 開始執行上班打卡流程
+2025-09-17 08:41:04 - puncher - INFO - 啟動瀏覽器並開啟打卡頁面...
+2025-09-17 08:41:12 - puncher - INFO - 辨識到驗證碼：E23TZ
+2025-09-17 08:41:18 - puncher - INFO - 上班打卡完成 ✅
+2025-09-17 08:41:20 - puncher - INFO - 瀏覽器關閉
