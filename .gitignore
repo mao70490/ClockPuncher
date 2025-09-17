@@ -15,3 +15,6 @@ captcha_dataset/
 
 # 忽略 src 資料夾內含敏感資料
 src/
+
+# 忽略log檔案
+*.log
