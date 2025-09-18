@@ -5,7 +5,7 @@ from captcha.captcha_solver import CaptchaSolver
 from sent_message.line_notify import send_line_message
 from logs.logger import setup_logger
 
-logger = setup_logger(log_file=r"C:\Users\user\source\repos\AutoClock\logs\puncher.log")
+logger = setup_logger(__name__, "logs/puncher.log")
 
 class Puncher:
     def __init__(self, config_path, model_path, dataset_path):

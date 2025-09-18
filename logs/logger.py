@@ -1,6 +1,6 @@
 import logging
 
-def setup_logger(log_name="puncher", log_file="puncher.log"):
+def setup_logger(log_name: str = __name__, log_file: str = "logs/puncher.log"):
     """建立並回傳 logger"""
     logger = logging.getLogger(log_name)
     logger.setLevel(logging.DEBUG)  # 設定最低級別
