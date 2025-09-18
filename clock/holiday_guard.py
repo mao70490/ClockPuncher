@@ -1,4 +1,3 @@
-from clock.holiday_checker import HolidayChecker
 from sent_message.line_notify import send_line_message
 
 def run_with_holiday_check(action_name, action_func, holiday_checker):

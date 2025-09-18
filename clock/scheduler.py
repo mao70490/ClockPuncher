@@ -1,5 +1,4 @@
-import datetime
-import random
+import datetime, random
 from apscheduler.schedulers.blocking import BlockingScheduler
 from clock.holiday_guard import run_with_holiday_check
 from sent_message.line_notify import send_line_message

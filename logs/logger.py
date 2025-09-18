@@ -1,5 +1,4 @@
 import logging
-import os
 
 def setup_logger(log_name="puncher", log_file="puncher.log"):
     """建立並回傳 logger"""
