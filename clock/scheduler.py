@@ -42,12 +42,13 @@ def schedule_today_jobs(puncher: Puncher, checker: HolidayChecker, scheduler: Bl
     else:
         msg_lines.append("上班打卡時間：已過，今天不打卡")
 
-    # 下班隨機時間 17:46~18:10
-    hour = random.choice([17, 18])
-    minute = random.randint(46, 59) if hour == 17 else random.randint(0, 10)
+    # 下班隨機時間 17:46~17:55
+    minute = random.randint(46, 55)
     signout_time = now.replace(
-        hour=hour, minute=minute,
-        second=random.randint(0, 59), microsecond=0
+        hour=17,
+        minute=minute,
+        second=0,
+        microsecond=0
     )
     if signout_time > now:
         scheduler.add_job(

@@ -17,4 +17,4 @@ captcha_dataset/
 src/
 
 # 忽略log檔案
-*.log
+*.log*
