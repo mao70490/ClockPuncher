@@ -1,6 +1,5 @@
-import logging
-from logging.handlers import TimedRotatingFileHandler
-import os
+import logging, os
+from concurrent_log_handler import ConcurrentTimedRotatingFileHandler
 
 def setup_logger(log_name: str = __name__, log_file_base: str = "logs/puncher.log"):
     """
@@ -15,7 +14,7 @@ def setup_logger(log_name: str = __name__, log_file_base: str = "logs/puncher.lo
 
     if not logger.handlers:
         # 每天午夜輪替
-        fh = TimedRotatingFileHandler(
+        fh = ConcurrentTimedRotatingFileHandler(
             log_file_base,
             when="midnight",
             interval=1,
