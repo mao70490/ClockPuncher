@@ -1,4 +1,4 @@
-import logging, os
+import logging, os, atexit
 from concurrent_log_handler import ConcurrentTimedRotatingFileHandler
 
 def setup_logger(log_name: str = __name__, log_file_base: str = "logs/puncher.log"):
@@ -39,5 +39,8 @@ def setup_logger(log_name: str = __name__, log_file_base: str = "logs/puncher.lo
 
         logger.addHandler(fh)
         logger.addHandler(ch)
+
+        # 註冊程式結束時自動釋放
+        atexit.register(logging.shutdown)
 
     return logger
