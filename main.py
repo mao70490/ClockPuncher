@@ -1,27 +1,31 @@
-import sys
+import sys, os
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from clock.puncher import Puncher
 from clock.holiday_checker import HolidayChecker
 from clock.holiday_guard import run_with_holiday_check
 from clock.scheduler import schedule_today_jobs
-# from check_net_itpg.network import ensure_network
+from check_net_itpg.network import NetworkManager
 
 # ----------- 初始化--------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 puncher = Puncher(
-    config_path=r"C:\Users\user\source\repos\AutoClock\config\config.json",
-    model_path=r"C:\Users\user\source\repos\AutoClock\captcha\captcha_model.h5",
-    dataset_path=r"C:\Users\user\source\repos\AutoClock\captcha_dataset"
+    config_path=os.path.join(BASE_DIR, "config", "config.json"),
+    model_path=os.path.join(BASE_DIR, "captcha", "captcha_model.h5"),
+    dataset_path=os.path.join(BASE_DIR, "captcha_dataset")
 )
 
 checker = HolidayChecker(
-    credentials_json="config/credentials.json",
+    credentials_json=os.path.join(BASE_DIR, "config", "credentials.json"),
     sheet_id="1Djkq8akgmFrBOxnhntJS3JdT5QZFPh5rfii1xzXrBMo"
 )
 
 scheduler = BlockingScheduler()
 
-# network = NetworkManager(config_path=r"C:\Users\user\source\repos\AutoClock\config\itp_guest.json")
+network = NetworkManager(
+    config_path=os.path.join(BASE_DIR, "config", "itp_guest.json")
+)
 
 # --------- 主程式---------------
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import subprocess, json, requests, time
 from bs4 import BeautifulSoup
+from sent_message.line_notify import send_line_message
 
 class NetworkManager:
     def __init__(self, config_path="config/itp_guest.json"):
@@ -23,8 +24,9 @@ class NetworkManager:
     def check_captive_portal(self):
         try:
             resp = requests.get("http://clients3.google.com/generate_204", timeout=5)
-            return resp.status_code != 204  # !=204 代表需要登入
-        except Exception:
+            return resp.status_code != 204  # !=204 代表需要登入(合併寫法)
+        except Exception as e:
+            print(f"檢查網路時發生錯誤: {e}")
             return False
 
     def login_portal(self):
@@ -58,7 +60,17 @@ class NetworkManager:
             print("偵測到需要登入，準備送帳號密碼...")
             status = self.login_portal()
             print("登入結果:", status)
+            if status == 200:
+                msg = f"{self.ssid_target} 登入成功 ✅"
+                print(msg)
+                send_line_message(msg) 
+            else:
+                msg = f"{self.ssid_target} 登入失敗 ❌ (status={status})"
+                print(msg)
+                send_line_message(msg)
             return status == 200
         else:
-            print("已連線，無需登入")
+            msg = f"已連線至 {self.ssid_target}，無需登入 ✅"
+            print(msg)
+            send_line_message(msg)
             return True

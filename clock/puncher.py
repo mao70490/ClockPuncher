@@ -47,26 +47,26 @@ class Puncher:
                 msg_text = driver.find_element(By.ID, "lblMessage").text.strip()
                 if msg_text:  # 有顯示文字
                     if "驗證碼錯誤" in msg_text or "帳號或密碼有誤" in msg_text:
-                        msg = f"{action_name}失敗 ❌ 原因：{msg_text}"
+                        msg = f"{action_name}失敗 ❌ \n原因：{msg_text}"
                         send_line_message(msg)
                         logger.warning(msg)
                         return
                     elif "成功" in msg_text:  # 判斷成功關鍵字
-                        msg = f"{action_name}成功 ✅ 訊息：{msg_text}"
+                        msg = f"{action_name}成功 ✅ \n訊息：{msg_text}"
                         send_line_message(msg)
                         logger.info(msg)
                     else:
-                        msg = f"{action_name}失敗 ❌ 原因：{msg_text}"
+                        msg = f"{action_name}失敗 ❌ \n原因：{msg_text}"
                         send_line_message(msg)
                         logger.warning(msg)
                         return
                 else:
                     # lblMessage 空白也視為失敗
-                    msg = f"{action_name}失敗 ❌ 原因：lblMessage 空白，可能沒有顯示提示或是測試中"
+                    msg = f"{action_name}失敗 ❌ \n原因：lblMessage 空白，可能沒有顯示提示或是測試中"
                     send_line_message(msg)
                     logger.warning(msg)
             except Exception:
-                msg = f"{action_name}失敗 ❌ 未找到 lblMessage 元素，可能登入流程沒有該訊息"
+                msg = f"{action_name}失敗 ❌ \n未找到 lblMessage 元素，可能登入流程沒有該訊息"
                 send_line_message(msg)
                 logger.warning(msg)
 
