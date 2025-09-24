@@ -56,7 +56,10 @@ class Puncher:
                         send_line_message(msg)
                         logger.info(msg)
                     else:
-                        logger.info(f"{action_name}訊息：{msg_text}")
+                        msg = f"{action_name}失敗 ❌ 原因：{msg_text}"
+                        send_line_message(msg)
+                        logger.warning(msg)
+                        return
                 else:
                     # lblMessage 空白也視為失敗
                     msg = f"{action_name}失敗 ❌ 原因：lblMessage 空白，可能沒有顯示提示或是測試中"
@@ -66,10 +69,6 @@ class Puncher:
                 msg = f"{action_name}失敗 ❌ 未找到 lblMessage 元素，可能登入流程沒有該訊息"
                 send_line_message(msg)
                 logger.warning(msg)
-
-            msg = f"{action_name}完成 ✅"
-            send_line_message(msg)
-            logger.info(msg)
 
         except Exception as e:
             logger.exception(f"{action_name}時發生未預期錯誤")

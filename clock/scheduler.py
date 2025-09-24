@@ -38,16 +38,15 @@ def schedule_today_jobs(puncher: Puncher, checker: HolidayChecker, scheduler: Bl
             lambda: run_with_holiday_check("上班打卡", puncher.sign_in, checker),
             'date', run_date=signin_time
         )
-        msg_lines.append(f"上班打卡時間：{signin_time.strftime('%H:%M:%S')}")
+        msg_lines.append(f"簽到時間：{signin_time.strftime('%H:%M:%S')}")
     else:
-        msg_lines.append("上班打卡時間：已過，今天不打卡")
+        msg_lines.append("簽到時間：已過，今天不打卡")
 
     # 下班隨機時間 17:46~17:55
-    minute = random.randint(46, 55)
     signout_time = now.replace(
         hour=17,
-        minute=minute,
-        second=0,
+        minute=random.randint(46, 55),
+        second=random.randint(0, 59),
         microsecond=0
     )
     if signout_time > now:
@@ -55,11 +54,11 @@ def schedule_today_jobs(puncher: Puncher, checker: HolidayChecker, scheduler: Bl
             lambda: run_with_holiday_check("下班打卡", puncher.sign_out, checker),
             'date', run_date=signout_time
         )
-        msg_lines.append(f"下班打卡時間：{signout_time.strftime('%H:%M:%S')}")
+        msg_lines.append(f"簽退時間：{signout_time.strftime('%H:%M:%S')}")
     else:
-        msg_lines.append("下班打卡時間：已過，今天不打卡")
+        msg_lines.append("簽退時間：已過，今天不打卡")
 
     # 印訊息並推播 LINE
-    msg = "今天打卡排程：\n" + "\n".join(msg_lines)
+    msg = "======今天打卡排程======\n" + "\n".join(msg_lines)
     print(msg)
     send_line_message(msg)

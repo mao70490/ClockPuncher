@@ -5,6 +5,7 @@ from clock.puncher import Puncher
 from clock.holiday_checker import HolidayChecker
 from clock.holiday_guard import run_with_holiday_check
 from clock.scheduler import schedule_today_jobs
+# from check_net_itpg.network import ensure_network
 
 # ----------- 初始化--------------
 puncher = Puncher(
@@ -20,6 +21,8 @@ checker = HolidayChecker(
 
 scheduler = BlockingScheduler()
 
+# network = NetworkManager(config_path=r"C:\Users\user\source\repos\AutoClock\config\itp_guest.json")
+
 # --------- 主程式---------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -27,6 +30,11 @@ if __name__ == "__main__":
         sys.exit(1)
 
     command = sys.argv[1].lower()
+
+    # 執行任何打卡動作前，先檢查網路
+    # if not network.ensure_network():
+    #     print("網路連線或登入失敗，無法繼續")
+    #     sys.exit(1)
 
     if command == "signin":
         run_with_holiday_check("上班打卡", puncher.sign_in, checker)
