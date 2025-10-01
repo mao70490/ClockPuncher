@@ -22,7 +22,7 @@ def setup_logger(log_name: str = __name__, log_file_base: str = "logs/puncher.lo
             encoding="utf-8"
         )
         # 設定檔名後綴為日期
-        fh.suffix = "%Y%m%d"  # 生成檔名像 puncher.log.20250927
+        # fh.suffix = "%Y%m%d"  # 生成檔名像 puncher.log.20250927
         fh.setLevel(logging.INFO)
 
         # console handler

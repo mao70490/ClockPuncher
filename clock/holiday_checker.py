@@ -1,8 +1,7 @@
-import datetime
-import gspread
+import datetime, gspread
 from logs.logger import setup_logger
 from gspread.exceptions import APIError
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 
 logger = setup_logger(__name__, "logs/puncher.log")
 class HolidayChecker:
@@ -17,7 +16,7 @@ class HolidayChecker:
             "https://spreadsheets.google.com/feeds",
             "https://www.googleapis.com/auth/drive"
         ]
-        creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_json, scope)
+        creds = Credentials.from_service_account_file(credentials_json, scopes=scope)
         self.client = gspread.authorize(creds)
         try:
             self.sheet = self.client.open_by_key(sheet_id).sheet1

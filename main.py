@@ -35,11 +35,24 @@ if __name__ == "__main__":
 
     command = sys.argv[1].lower()
 
-    # 執行任何打卡動作前，先檢查網路
-    # if not network.ensure_network():
-    #     print("網路連線或登入失敗，無法繼續")
-    #     sys.exit(1)
+    # -------- 網路登入測試 ----------
+    if command == "network":
+        success, msg = network.ensure_network()
+        print(f"網路登入測試結果: {msg}")
+        if success:
+            print("網路登入成功 ✅")
+        else:
+            print("網路登入失敗 ❌")
+        sys.exit(0)
 
+    # -------- 執行任何打卡前先檢查網路 ----------
+    success, net_msg = network.ensure_network()
+    print(f"網路檢查結果: {net_msg}")
+    if not success:
+        print("網路連線或登入失敗，無法繼續")
+        sys.exit(1)
+
+    # -------- 執行打卡或排程 ----------
     if command == "signin":
         run_with_holiday_check("上班打卡", puncher.sign_in, checker)
 
