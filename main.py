@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, asyncio
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from clock.puncher import Puncher
@@ -54,18 +54,18 @@ if __name__ == "__main__":
 
     # -------- 執行打卡或排程 ----------
     if command == "signin":
-        run_with_holiday_check("上班打卡", puncher.sign_in, checker)
+        asyncio.run(run_with_holiday_check("上班打卡", puncher.sign_in, checker))
 
     elif command == "signout":
-        run_with_holiday_check("下班打卡", puncher.sign_out, checker)
+        asyncio.run(run_with_holiday_check("下班打卡", puncher.sign_out, checker))
 
     elif command == "schedule":
         # 啟動時先排今天的打卡
-        schedule_today_jobs(puncher, checker, scheduler)
+        asyncio.run(schedule_today_jobs(puncher, checker, scheduler))
 
         # 每天凌晨 00:01 排當天打卡（週一到週五）
         scheduler.add_job(
-            lambda: schedule_today_jobs(puncher, checker, scheduler),
+            lambda: asyncio.run(schedule_today_jobs(puncher, checker, scheduler)),
             CronTrigger(hour=0, minute=1, day_of_week="mon-fri")
         )
 

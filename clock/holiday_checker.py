@@ -1,4 +1,4 @@
-import datetime, gspread
+import datetime, gspread, asyncio
 from logs.logger import setup_logger
 from gspread.exceptions import APIError
 from google.oauth2.service_account import Credentials
@@ -27,12 +27,13 @@ class HolidayChecker:
             self.logger.exception(f"Unexpected error while opening sheet: {e}")
             self.sheet = None
 
-    def get_sheet_data(self):
+    async def get_sheet_data(self):
         """取得整個 Sheet 資料"""
         if not self.sheet:
             self.logger.error("Sheet not initialized, cannot fetch data")
             return []
-    
+        await asyncio.sleep(0)
+
         try:
             return self.sheet.get_all_values()  # [[日期, 狀態, 備註], ...]
         except APIError as e:
@@ -42,10 +43,11 @@ class HolidayChecker:
             self.logger.exception(f"Unexpected error while fetching sheet data: {e}")
             return []
 
-    def is_off_today(self):
+    async def is_off_today(self):
         """判斷今天是否為假日或個人請假"""
         today_str = datetime.date.today().strftime("%Y-%m-%d")
-        for row in self.get_sheet_data():
+        rows = await self.get_sheet_data()
+        for row in rows:
             if len(row) < 2:
                 continue
             date, status = row[0], row[1]

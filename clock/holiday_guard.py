@@ -1,8 +1,9 @@
+import asyncio
 from sent_message.line_notify import send_line_message
 
-def run_with_holiday_check(action_name, action_func, holiday_checker):
+async def run_with_holiday_check(action_name, action_func, holiday_checker):
     """執行打卡前檢查是否是假日或請假"""
-    is_off, status, note = holiday_checker.is_off_today()
+    is_off, status, note = await holiday_checker.is_off_today()
     if is_off:
         msg = f"今天為【{status}】{f'（{note}）' if note else ''}，跳過 {action_name}"
         print(msg)
