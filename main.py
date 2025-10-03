@@ -7,21 +7,8 @@ from clock.holiday_guard import run_with_holiday_check
 from clock.scheduler import schedule_today_jobs
 from check_net_itpg.network import NetworkManager
 
-# ----------- 初始化--------------
+# ----------- 網路先初始化--------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-puncher = Puncher(
-    config_path=os.path.join(BASE_DIR, "config", "config.json"),
-    model_path=os.path.join(BASE_DIR, "captcha", "captcha_model.h5"),
-    dataset_path=os.path.join(BASE_DIR, "captcha_dataset")
-)
-
-checker = HolidayChecker(
-    credentials_json=os.path.join(BASE_DIR, "config", "credentials.json"),
-    sheet_id="1Djkq8akgmFrBOxnhntJS3JdT5QZFPh5rfii1xzXrBMo"
-)
-
-scheduler = BlockingScheduler()
 
 network = NetworkManager(
     config_path=os.path.join(BASE_DIR, "config", "itp_guest.json")
@@ -47,25 +34,39 @@ if __name__ == "__main__":
 
     # -------- 執行任何打卡前先檢查網路 ----------
     success, net_msg = network.ensure_network()
-    print(f"網路檢查結果: {net_msg}")
+    print(f"啟動專案後網路檢查結果: {net_msg}")
     if not success:
         print("網路連線或登入失敗，無法繼續")
         sys.exit(1)
 
+    # -------- 網路檢查成功後再初始化其他物件 ----------
+    puncher = Puncher(
+        config_path=os.path.join(BASE_DIR, "config", "config.json"),
+        model_path=os.path.join(BASE_DIR, "captcha", "captcha_model.h5"),
+        dataset_path=os.path.join(BASE_DIR, "captcha_dataset")
+    )
+
+    checker = HolidayChecker(
+        credentials_json=os.path.join(BASE_DIR, "config", "credentials.json"),
+        sheet_id="1Djkq8akgmFrBOxnhntJS3JdT5QZFPh5rfii1xzXrBMo"
+    )
+
+    scheduler = BlockingScheduler()
+
     # -------- 執行打卡或排程 ----------
     if command == "signin":
-        asyncio.run(run_with_holiday_check("上班打卡", puncher.sign_in, checker))
+        asyncio.run(run_with_holiday_check("上班打卡", puncher.sign_in, checker, network))
 
     elif command == "signout":
-        asyncio.run(run_with_holiday_check("下班打卡", puncher.sign_out, checker))
+        asyncio.run(run_with_holiday_check("下班打卡", puncher.sign_out, checker, network))
 
     elif command == "schedule":
         # 啟動時先排今天的打卡
-        asyncio.run(schedule_today_jobs(puncher, checker, scheduler))
+        asyncio.run(schedule_today_jobs(puncher, checker, scheduler, network))
 
         # 每天凌晨 00:01 排當天打卡（週一到週五）
         scheduler.add_job(
-            lambda: asyncio.run(schedule_today_jobs(puncher, checker, scheduler)),
+            lambda: asyncio.run(schedule_today_jobs(puncher, checker, scheduler, network)),
             CronTrigger(hour=0, minute=1, day_of_week="mon-fri")
         )
 
