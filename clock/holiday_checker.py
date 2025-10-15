@@ -22,26 +22,26 @@ class HolidayChecker:
             self.sheet = self.client.open_by_key(sheet_id).sheet1
         except APIError as e:
             self.logger.error(f"Google Sheets API error during init: {e}")
-            self.sheet = None
+            raise
         except Exception as e:
             self.logger.exception(f"Unexpected error while opening sheet: {e}")
-            self.sheet = None
+            raise
 
     async def get_sheet_data(self):
         """取得整個 Sheet 資料"""
         if not self.sheet:
-            self.logger.error("Sheet not initialized, cannot fetch data")
-            return []
+            self.logger.exception("Sheet not initialized, cannot fetch data")
+            raise RuntimeError("Sheet not initialized, cannot fetch data")
         await asyncio.sleep(0)
 
         try:
             return self.sheet.get_all_values()  # [[日期, 狀態, 備註], ...]
         except APIError as e:
             self.logger.error(f"Google Sheets API error: {e}")
-            return []  # 或者 return None，看你需要
+            raise
         except Exception as e:
             self.logger.exception(f"Unexpected error while fetching sheet data: {e}")
-            return []
+            raise
 
     async def is_off_today(self):
         """判斷今天是否為假日或個人請假"""
