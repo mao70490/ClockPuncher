@@ -23,12 +23,24 @@ class NetworkManager:
         self.driver = webdriver.Chrome(options=chrome_options)
 
     def get_current_ssid(self):
-        result = subprocess.check_output(
-            "netsh wlan show interfaces", shell=True, encoding="mbcs"
-        )
+        try:
+            # 先嘗試用 bytes 取得結果，避免解碼錯誤
+            result_bytes = subprocess.check_output("netsh wlan show interfaces", shell=True)
+            
+            # 嘗試用常見編碼依序解碼
+            try:
+                result = result_bytes.decode("cp950")  # Big5（繁中 Windows 常見）
+            except UnicodeDecodeError:
+                result = result_bytes.decode("utf-8", errors="ignore")  # 新版 Windows 常見
+        except subprocess.CalledProcessError:
+            return None  # netsh 執行失敗
+
+        # 解析 SSID
         for line in result.splitlines():
             if "SSID" in line and "BSSID" not in line:
-                return line.split(":")[1].strip()
+                parts = line.split(":", 1)
+                if len(parts) > 1:
+                    return parts[1].strip()
         return None
 
     def connect_wifi(self, ssid=None):
