@@ -6,6 +6,7 @@ from clock.holiday_checker import HolidayChecker
 from clock.holiday_guard import run_with_holiday_check
 from clock.scheduler import schedule_today_jobs
 from check_net_itpg.network import NetworkManager
+from clock.scheduler_safe import schedule_job_wrapper
 
 # ----------- 網路先初始化--------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -72,10 +73,11 @@ if __name__ == "__main__":
 
             # 每天凌晨 00:01 排當天打卡（週一到週五）
             scheduler.add_job(
-                lambda: asyncio.run(schedule_today_jobs(puncher, checker, scheduler, network)),
-                CronTrigger(hour=0, minute=1, day_of_week="mon-fri"),
-                misfire_grace_time=None,  # 無限寬限期（錯過多久都補）
-                coalesce=True              # 只補執行最新一次
+                schedule_job_wrapper,
+                args=(puncher, checker, scheduler, network),
+                trigger=CronTrigger(hour=0, minute=1, day_of_week="mon-fri"),
+                misfire_grace_time=300,  # 最多補 5 分鐘
+                coalesce=True            # 只補執行最新一次
             )
 
             print("排程啟動中…")
