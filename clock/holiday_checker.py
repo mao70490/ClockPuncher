@@ -27,6 +27,7 @@ class HolidayChecker:
             self.logger.exception(f"Unexpected error while opening sheet: {e}")
             raise
 
+    # 原始方法，留著日後參考使用
     async def get_sheet_data(self):
         """取得整個 Sheet 資料"""
         if not self.sheet:
@@ -43,15 +44,51 @@ class HolidayChecker:
             self.logger.exception(f"Unexpected error while fetching sheet data: {e}")
             raise
 
+    # retry 方法
+    async def get_sheet_data_with_retry(self, retries=3, delay=2):
+        """
+        嘗試多次取得 Sheet 資料
+        """
+        last_exc = None
+
+        for attempt in range(1, retries + 1):
+            try:
+                return self.sheet.get_all_values()
+            except APIError as e:
+                last_exc = e
+                self.logger.warning(
+                    f"Google Sheets API error (attempt {attempt}/{retries}): {e}"
+                )
+            except Exception as e:
+                last_exc = e
+                self.logger.warning(
+                    f"Unexpected error (attempt {attempt}/{retries}): {e}"
+                )
+
+            if attempt < retries:
+                await asyncio.sleep(delay)
+
+        # 全部失敗
+        raise last_exc
+    
     async def is_off_today(self):
         """判斷今天是否為假日或個人請假"""
         today_str = datetime.date.today().strftime("%Y-%m-%d")
-        rows = await self.get_sheet_data()
+
+        try:
+            rows = await self.get_sheet_data_with_retry()
+        except Exception as e:
+            # 不炸排程，回 UNKNOWN
+            self.logger.error(f"Holiday check failed, status UNKNOWN: {e}")
+            return None, "UNKNOWN", "Google Sheet 無法存取"
+        
         for row in rows:
             if len(row) < 2:
                 continue
             date, status = row[0], row[1]
             note = row[2] if len(row) > 2 else ""
+
             if date == today_str and status in ["假日", "請假"]:
                 return True, status, note
+            
         return False, None, None
