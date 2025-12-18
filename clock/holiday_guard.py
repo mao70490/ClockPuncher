@@ -17,6 +17,14 @@ async def run_with_holiday_check(action_name, action_func, holiday_checker, netw
 
         # -------- 再檢查是否是假日 --------
         is_off, status, note = await holiday_checker.is_off_today()
+
+        # UNKNOWN → 不打卡
+        if is_off is None:
+            msg = f"{action_name}：假日狀態不明（{status}），為避免誤打卡，已跳過"
+            print(msg)
+            send_line_message(msg)
+            return
+
         if is_off:
             msg = f"今天為【{status}】{f'（{note}）' if note else ''}，跳過 {action_name}"
             print(msg)

@@ -3,6 +3,7 @@ from logs.logger import setup_logger
 from gspread.exceptions import APIError
 from google.oauth2.service_account import Credentials
 
+# TEST_FORCE_UNKNOWN = True
 logger = setup_logger(__name__, "logs/puncher.log")
 class HolidayChecker:
     def __init__(self, credentials_json: str, sheet_id: str):
@@ -49,6 +50,12 @@ class HolidayChecker:
         """
         嘗試多次取得 Sheet 資料
         """
+
+        # ===== UNKNOWN 測試用 =====
+        # if TEST_FORCE_UNKNOWN:
+        #     raise RuntimeError("TEST_FORCE_UNKNOWN")
+        # =======================
+
         last_exc = None
 
         for attempt in range(1, retries + 1):
@@ -81,6 +88,8 @@ class HolidayChecker:
             # 不炸排程，回 UNKNOWN
             self.logger.error(f"Holiday check failed, status UNKNOWN: {e}")
             return None, "UNKNOWN", "Google Sheet 無法存取"
+        # 注意：只有 raise exception 才會進 except
+        # return None 不會觸發 UNKNOWN 流程
         
         for row in rows:
             if len(row) < 2:
