@@ -62,7 +62,7 @@ class Puncher:
                         return
                 else:
                     # lblMessage 空白也視為失敗
-                    msg = f"{action_name}失敗 ❌ \n原因：lblMessage 空白，可能沒有顯示提示或是測試中"
+                    msg = f"{action_name}成功 ✅ \n但lblMessage 空白，沒有提示或是測試中，請檢查後台打卡紀錄"
                     send_line_message(msg)
                     logger.warning(msg)
             except Exception:
