@@ -12,7 +12,6 @@ async def run_with_holiday_check(action_name, action_func, holiday_checker, netw
             if not success:
                 fail_msg = f"{action_name} 失敗：無法連上 Wi-Fi"
                 print(fail_msg)
-                send_line_message(fail_msg)
                 return
 
         # -------- 再檢查是否是假日 --------

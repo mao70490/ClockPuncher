@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from sent_message.line_notify import send_line_message
 
 class NetworkManager:
     def __init__(self, config_path="config/itp_guest.json"):
@@ -120,7 +119,6 @@ class NetworkManager:
                 line_msg = f"{self.ssid_target} 登入成功 ✅"
                 print(line_msg)
                 time.sleep(3)  # 等待幾秒讓網路穩定
-                send_line_message(line_msg)
             else:
                 line_msg = f"{self.ssid_target} 登入失敗 ❌ ({msg})"
                 print(line_msg)
@@ -128,5 +126,4 @@ class NetworkManager:
         else:
             msg = f"已連線至 {self.ssid_target}，無需登入 ✅"
             print(msg)
-            send_line_message(msg)
             return True, msg
