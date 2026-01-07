@@ -46,6 +46,22 @@ class NetworkManager:
         target = ssid or self.ssid_target
         subprocess.run(f'netsh wlan connect name="{target}"', shell=True)
 
+    # 檢查內網是否已放行
+    def check_internal_network(self, retries=10, interval=0.8):
+        check_url = self.config.get(
+            "internal_check_url",
+            "http://clients3.google.com/generate_204"
+        )
+        for _ in range(retries):
+            try:
+                resp = requests.get(check_url, timeout=5)
+                if resp.status_code == 204:
+                    return True
+            except requests.RequestException:
+                pass
+            time.sleep(interval)
+        return False
+
     def check_captive_portal(self):
         try:
             resp = requests.get("http://clients3.google.com/generate_204", timeout=5)
@@ -97,11 +113,6 @@ class NetworkManager:
             return False, "等待帳號欄位超時，可能不是在 login page", getattr(driver, "current_url", "unknown")
         except Exception as e:
             return False, f"執行例外: {e}", getattr(driver, "current_url", "unknown")
-        finally:
-            if success:
-                driver.quit()
-            else:
-                print("登入失敗，保留 driver 以便檢查頁面")
 
     def ensure_network(self):
         """確保已連上正確 Wi-Fi 並登入 Portal"""
@@ -111,19 +122,24 @@ class NetworkManager:
             self.connect_wifi()
             time.sleep(8)  # 等待連線成功
 
+        # 先檢查內網
+        if self.check_internal_network():
+            print(f"已連線至 {self.ssid_target}，內網已通 ✅")
+            return True, "內網已放行"
+
         if self.check_captive_portal():
             print("偵測到需要登入，準備送帳號密碼...")
             success, msg, cur_url = self.login_portal()
             print("登入結果:", msg)
             if success:
-                line_msg = f"{self.ssid_target} 登入成功 ✅"
-                print(line_msg)
-                time.sleep(3)  # 等待幾秒讓網路穩定
+                # 登入後再次確認內網是否通
+                if self.check_internal_network():
+                    print("內網已放行 ✅")
+                    return True, "登入成功並放行"
+                else:
+                    return False, "登入成功但內網尚未放行"
             else:
-                line_msg = f"{self.ssid_target} 登入失敗 ❌ ({msg})"
-                print(line_msg)
-            return success, msg
+                return False, msg
         else:
-            msg = f"已連線至 {self.ssid_target}，無需登入 ✅"
-            print(msg)
-            return True, msg
+            print(f"已連線至 {self.ssid_target}，無需登入 ✅")
+            return True, "已連線無需登入"
